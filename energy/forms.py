@@ -21,3 +21,16 @@ class RadiationForm(forms.ModelForm):
         model = Radiation
         fields = '__all__'
 
+
+class HomeFilterSearchRadiation(forms.ModelForm):
+    class Meta:
+        model = Radiation
+        fields = ('location', 'azimuth', 'slope',)
+
+
+class HomeFilterSearchPV(forms.ModelForm):
+    class Meta:
+        model = Photovoltaic
+        fields = ('facility_name',)
+
+

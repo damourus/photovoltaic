@@ -6,4 +6,5 @@ from .models import *
 admin.site.register(Photovoltaic)
 admin.site.register(Inverter)
 admin.site.register(Radiation)
+# admin.site.register(InverterCategory)
 

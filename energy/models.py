@@ -4,6 +4,13 @@ from django.db.models import Sum
 # Create your models here.
 
 
+# class InverterCategory(models.Model):
+#     name = models.CharField(max_length=255)
+#
+#     def __str__(self):
+#         return self.name
+
+
 class Inverter(models.Model):
     CATEGORY = {
         ('Satcon Technology: PVS-30 (480V) 480V [CEC 2016]', 'Satcon Technology: PVS-30 (480V) 480V [CEC 2016]'),
@@ -11,7 +18,7 @@ class Inverter(models.Model):
         ('SMA America: SB7000US 240V [CEC 2007]', 'SMA America: SB7000US 240V [CEC 2007]'),
         ('OPTI International: GT 3000 (208V) 208V [CEC 2016]', 'OPTI International: GT 3000 (208V) 208V [CEC 2016]'),
     }
-
+    # inverter_model = models.ForeignKey(InverterCategory, on_delete=models.CASCADE)
     inverter_model = models.CharField(max_length=200, null=True, choices=CATEGORY)
     nominal_ac_voltage = models.IntegerField(max_length=10, null=True)
     maximum_ac_power = models.IntegerField(max_length=10, null=True)

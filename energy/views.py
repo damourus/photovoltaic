@@ -1,12 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from django.db.models import Sum
-
+from energy.models import Inverter, Photovoltaic, Radiation
 
 # Create your views here.
 
 
 def index(request):
+    test = Radiation.objects.values('location', 'slope', 'azimuth', 'inverter_model__inverter_model',
+                                    'pv_model__facility_name', 'pv_model__pv_model', 'pv_model__number_of_modules')
+    search_form1 = HomeFilterSearchRadiation(request.POST)
+    search_form2 = HomeFilterSearchPV(request.POST)
+
+    return render(request, 'index.html', {'context': test, 'form_rad': search_form1, 'form_pv': search_form2})
+
+
+def test_admin(request):
     pvs = Photovoltaic.objects.all()
     inverters = Inverter.objects.all()
     monthrad = Radiation.objects.all()
