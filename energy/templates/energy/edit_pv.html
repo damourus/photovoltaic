@@ -1,0 +1,24 @@
+{% extends 'energy/base.html' %}
+
+
+{% block body %}
+
+<div class="container">
+<h1>PV SYSTEM FORM</h1>
+    <form method="post">
+
+        {% csrf_token %}
+{% for field in form %}
+   <div class="form-group row">
+        <label for="id_{{field.name}}" class="col-2 col-form-label">{{field.label}}</label>
+       <div class="col-10">
+           {{ field }}
+       </div>
+   </div>
+{% endfor %}
+            <br>
+<button type="submit" class="btn btn-primary" name="button">Save Data</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'energy/base.html' %}
+
+{% block body %}
+
+<div class="row">
+   <div class="col-md">
+      <div class="card card-body">
+         <table class="table table-sm">
+            <tr>
+               <th>Month</th>
+               <th>Monthly Radiations</th>
+
+            </tr>
+            {% for sum in mysum %}
+            <tr>
+               <td>{{sum.month}}</td>
+               <td>{{sum.radiations}}</td>
+
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+   </div>
+</div>
+
+{% endblock %}
