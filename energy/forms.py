@@ -5,32 +5,31 @@ from .models import *
 class PvForm(forms.ModelForm):
     class Meta:
         model = Photovoltaic
-        fields = '__all__'
+        fields = ('facility_name', 'pv_model', 'envelope_selection', 'direction', 'number_of_modules',
+                  'non_vertical_surface_solar_attenuation_rate', 'total_equipment_cost')
 
 
 class InverterForm(forms.ModelForm):
     class Meta:
         model = Inverter
-        fields = ('inverter_model', 'nominal_ac_voltage', 'maximum_ac_power', 'maximum_dc_power', 'nominal_dc_voltage',
-                  'power_consumption_during_operation', 'power_consumption_at_night', 'maximum_dc_voltage',
-                  'maximum_dc_current', 'minimum_mppt_dc_voltage', 'maximum_mppt_dc_voltage')
+        fields = ('inverter_model', )
 
 
 class RadiationForm(forms.ModelForm):
     class Meta:
         model = Radiation
-        fields = '__all__'
+        fields = ('location', 'azimuth', 'slope')
 
 
-class HomeFilterSearchRadiation(forms.ModelForm):
-    class Meta:
-        model = Radiation
-        fields = ('location', 'azimuth', 'slope',)
-
-
-class HomeFilterSearchPV(forms.ModelForm):
-    class Meta:
-        model = Photovoltaic
-        fields = ('facility_name',)
+# class HomeFilterSearchRadiation(forms.ModelForm):
+#     class Meta:
+#         model = Radiation
+#         fields = ('location', 'azimuth', 'slope',)
+#
+#
+# class HomeFilterSearchPV(forms.ModelForm):
+#     class Meta:
+#         model = Photovoltaic
+#         fields = ('facility_name',)
 
 

@@ -1,103 +1,10 @@
 {% extends 'energy/base.html' %}
 {% block body %}
-
 <br>
-<div class="row">
 <div class="button.group">
 
-    <a href="{% url 'add_inverter' %}" class="btn btn-primary btn-sm">Input Inverter</a>
+    <a href="{% url 'add_data' %}" class="btn btn-primary btn-sm">Input Data</a>
 
-    <a href="{% url 'add_pv' %}" class="btn btn-primary btn-sm">Input PV</a>
-
-    <a href="{% url 'add_radiation' %}" class="btn btn-primary btn-sm">Input Radiation</a>
-
-    <a href="{% url 'display_monthlyRad' %}" class="btn btn-warning btn-sm">Monthly Radiation</a>
-
-</div>
-</div>
-
-<br>
-
-<div class="row">
-    <div class="col-md">
-        <h5>ENTERED PV </h5>
-        <hr>
-        <div class="card card-body">
-            <table class="table table-md">
-                <tr>
-                    <th>Id</th>
-                    <th>Facility Name</th>
-                    <th>Inverter Model</th>
-                    <th>PV Model</th>
-                    <th>Rated Power</th>
-                    <th>Number of Modules(EA)</th>
-                    <th>BIPV</th>
-                    <th>Width</th>
-                    <th>Length</th>
-                    <th>Area</th>
-                    <th>PV Efficiency</th>
-                    <th>Update</th>
-                    <th>Remove</th>
-                </tr>
-                {% for pv in pvs %}
-
-                <tr>
-                     <td>{{ pv.pk }}</td>
-                    <td>{{ pv.facility_name }}</td>
-                    <td>{{ pv.inverter_model }}</td>
-                    <td>{{ pv.pv_model }}</td>
-                    <td>{{ pv.rated_power }}</td>
-                    <td>{{ pv.number_of_modules }}</td>
-                    <td>{{ pv.b_i_p_v }}</td>
-                    <td>{{ pv.width }}</td>
-                    <td>{{ pv.length }}</td>
-                    <td>{{ pv.area }}</td>
-                    <td>{{ pv.efficiency }}</td>
-                    <td> <a href="{% url 'edit_pv' pv.pk %}" class="btn btn-warning btn-sm" role="button">Edit</a> </td>
-                    <td> <a href="{% url 'delete_pv' pv.pk %}" class="btn btn-danger btn-sm" role="button">Delete</a> </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-</div>
-
-<br>
-<div class="row">
-    <div class="col-md">
-        <h5>INVERTER DATA</h5>
-        <hr>
-        <div class="card card-body">
-            <table class="table table-md">
-                <tr>
-                    <td>Id</td>
-                    <th>Inverter Model</th>
-                    <th>Nominal AC Voltage</th>
-                    <th>Maximum AC Power</th>
-                    <th>Maximum DC Power</th>
-                    <th>Inverter Efficiency</th>
-                    <th>System Loss</th>
-                    <th>Update</th>
-                    <th>Remove</th>
-                </tr>
-                {% for inverter in inverters %}
-
-                <tr>
-                     <td>{{ inverter.pk }}</td>
-                    <td>{{ inverter.inverter_model }}</td>
-                    <td>{{ inverter.nominal_ac_voltage }}</td>
-                    <td>{{ inverter.maximum_ac_power }}</td>
-                    <td>{{ inverter.maximum_dc_power }}</td>
-                    <td>{{ inverter.invertereff }}</td>
-                    <td>{{ inverter.loss }}</td>
-                    <td> <a href="{% url 'edit_pv' inverter.pk %}" class="btn btn-warning btn-sm" role="button">Edit</a> </td>
-                    <td> <a href="{% url 'delete_pv' inverter.pk %}" class="btn btn-danger btn-sm" role="button">Delete</a> </td>
-                </tr>
-
-                {% endfor %}
-            </table>
-        </div>
-    </div>
 </div>
 
 {% endblock %}

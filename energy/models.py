@@ -4,22 +4,36 @@ from django.db.models import Sum
 # Create your models here.
 
 
-# class InverterCategory(models.Model):
-#     name = models.CharField(max_length=255)
-#
-#     def __str__(self):
-#         return self.name
+class InverterCategory(models.Model):
+    name = models.CharField(max_length=255, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class PvCategory(models.Model):
+    name = models.CharField(max_length=255, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Location(models.Model):
+    name = models.CharField(max_length=50, null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Inverter(models.Model):
-    CATEGORY = {
-        ('Satcon Technology: PVS-30 (480V) 480V [CEC 2016]', 'Satcon Technology: PVS-30 (480V) 480V [CEC 2016]'),
-        ('ABB: MICRO-0.25-I-OUTD-US-208 [208V] 208V [CEC 2018]', 'ABB: MICRO-0.25-I-OUTD-US-208 [208V] 208V [CEC 2018]'),
-        ('SMA America: SB7000US 240V [CEC 2007]', 'SMA America: SB7000US 240V [CEC 2007]'),
-        ('OPTI International: GT 3000 (208V) 208V [CEC 2016]', 'OPTI International: GT 3000 (208V) 208V [CEC 2016]'),
-    }
-    # inverter_model = models.ForeignKey(InverterCategory, on_delete=models.CASCADE)
-    inverter_model = models.CharField(max_length=200, null=True, choices=CATEGORY)
+    # CATEGORY = {
+    #     ('Satcon Technology: PVS-30 (480V) 480V [CEC 2016]', 'Satcon Technology: PVS-30 (480V) 480V [CEC 2016]'),
+    #     ('ABB: MICRO-0.25-I-OUTD-US-208 [208V] 208V [CEC 2018]', 'ABB: MICRO-0.25-I-OUTD-US-208 [208V] 208V [CEC 2018]'),
+    #     ('SMA America: SB7000US 240V [CEC 2007]', 'SMA America: SB7000US 240V [CEC 2007]'),
+    #     ('OPTI International: GT 3000 (208V) 208V [CEC 2016]', 'OPTI International: GT 3000 (208V) 208V [CEC 2016]'),
+    # }
+    inverter_model = models.ForeignKey(InverterCategory, on_delete=models.CASCADE)
+    # inverter_model = models.CharField(max_length=200, null=True, choices=CATEGORY)
     nominal_ac_voltage = models.IntegerField(max_length=10, null=True)
     maximum_ac_power = models.IntegerField(max_length=10, null=True)
     maximum_dc_power = models.FloatField(max_length=10, null=True)
@@ -46,7 +60,7 @@ class Inverter(models.Model):
     loss = property(rloss)
 
     def __str__(self):
-        return self.inverter_model
+        return self.inverter_model.name
 
 
 class Photovoltaic(models.Model):
@@ -54,20 +68,36 @@ class Photovoltaic(models.Model):
         ('Yes', 'Yes'),
         ('No', 'No'),
     }
-    TYPES ={
-        ('Neo Solar Power D6M350E4AME', 'Neo Solar Power D6M350E4AME'),
-        ('A10Green Technology A10J-M60-235', 'A10Green Technology A10J-M60-235'),
-        ('A10Green Technology A10J-M60-220', 'A10Green Technology A10J-M60-220'),
-        ('LG Electronics LG345S2W-A5', 'LG Electronics LG345S2W-A5'),
+    TYPES = {
+        ('South Roof', 'South Roof'),
+        ('North Roof', 'North Roof'),
+        ('West Roof', 'West Roof'),
+        ('East Roof', 'East Roof'),
     }
+    Choices = {
+        ('South', 'South'),
+        ('North', 'North'),
+        ('West', 'West'),
+        ('East', 'East'),
+    }
+    # TYPES ={
+    #     ('Neo Solar Power D6M350E4AME', 'Neo Solar Power D6M350E4AME'),
+    #     ('A10Green Technology A10J-M60-235', 'A10Green Technology A10J-M60-235'),
+    #     ('A10Green Technology A10J-M60-220', 'A10Green Technology A10J-M60-220'),
+    #     ('LG Electronics LG345S2W-A5', 'LG Electronics LG345S2W-A5'),
+    # }
     facility_name = models.CharField(max_length=8, null=True)
-    inverter_model = models.ForeignKey(Inverter, null=True, on_delete=models.CASCADE)
-    pv_model = models.CharField(max_length=300, null=True, choices=TYPES)
+    inverter_model = models.ForeignKey(InverterCategory, null=True, on_delete=models.CASCADE)
+    pv_model = models.ForeignKey(PvCategory, null=True, on_delete=models.CASCADE)
     rated_power = models.IntegerField(max_length=10, null=True)
     number_of_modules = models.IntegerField(max_length=8, null=True)
-    b_i_p_v = models.CharField(max_length=3, null=True, choices=choices)
+    b_i_p_v = models.CharField(max_length=4, null=True, choices=choices)
     width = models.FloatField(max_length=10, null=True)
     length = models.IntegerField(max_length=10, null=True)
+    envelope_selection = models.CharField(max_length=10, null=True, choices=TYPES)
+    direction = models.CharField(max_length=10, null=True, choices=Choices)
+    non_vertical_surface_solar_attenuation_rate = models.FloatField(max_length=10, null=True)
+    total_equipment_cost = models.IntegerField(max_length=10, null=True)
 
     def _area(self):
         return self.width * self.length * self.number_of_modules
@@ -80,11 +110,11 @@ class Photovoltaic(models.Model):
     efficiency = property(_efficiency)
 
     def __str__(self):
-        return self.pv_model
+        return self.pv_model.name
 
 
 class Radiation(models.Model):
-    location = models.CharField(max_length=50, null=True)
+    location = models.ForeignKey(Location, null=True, on_delete=models.CASCADE)
     slope = models.FloatField(max_length=10, null=True)
     azimuth = models.IntegerField(max_length=10, null=True)
     radiations = models.FloatField(max_length=10, null=True)
@@ -92,9 +122,7 @@ class Radiation(models.Model):
     month = models.CharField(max_length=10, null=True)
     day = models.IntegerField(max_length=10, null=True)
     time = models.TimeField(max_length=10, null=True)
-    pv_model = models.ForeignKey(Photovoltaic, max_length=10, null=True, on_delete=models.CASCADE)
-    inverter_model = models.ForeignKey(Inverter, max_length=10, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.location
+        return f"{self.location.name}  {self.time} {self.day}"
 

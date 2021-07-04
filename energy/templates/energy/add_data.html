@@ -1,24 +1,103 @@
 {% extends 'energy/base.html' %}
-
+{% load verify_tags %}
 
 {% block body %}
 
 <div class="container">
 <h1>DATA ENTRY FORM</h1>
+    {% if error_message %}
+    <ul class="errorlist">
+        <li>{{ error_message }}</li>
+    </ul>
+    {% endif %}
     <form method="post">
-
+        <br>
         {% csrf_token %}
-{% for field in form %}
-   <div class="form-group row">
-        <label for="id_{{field.name}}" class="col-2 col-form-label">{{field.label}}</label>
-       <div class="col-10">
-           {{ field }}
-       </div>
-   </div>
-{% endfor %}
-            <br>
+  <fieldset class="add_data">
+    <legend>FACILITY</legend>
+    <table>
+        {% form_row pv_form.facility_name %}
+    </table>
+</fieldset>
+        <br>
+         <fieldset class="add_data">
+    <legend>LOCATION</legend>
+    <table>
+        {% form_row radiation_form.location %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>ENVELOPE</legend>
+    <table>
+        {% form_row pv_form.envelope_selection %}
+        {% form_row pv_form.direction %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>INSTALLATION SLOPE</legend>
+    <table>
+        {% form_row radiation_form.azimuth %}
+        {% form_row radiation_form.slope %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>PV SPECIFICATION</legend>
+    <table>
+        {% form_row pv_form.pv_model %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>SCALE</legend>
+    <table>
+        {% form_row pv_form.number_of_modules %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>INVERTER</legend>
+    <table>
+        {% form_row inverter_form.inverter_model %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>Non Vertical</legend>
+    <table>
+        {% form_row pv_form.non_vertical_surface_solar_attenuation_rate %}
+    </table>
+</fieldset>
+        <br>
+<fieldset class="add_data">
+    <legend>Initial Cost</legend>
+    <table>
+        {% form_row pv_form.total_equipment_cost %}
+    </table>
+</fieldset>
+        <br>
 <button type="submit" class="btn btn-primary" name="button">Save Data</button>
     </form>
 </div>
+
+<!--<div class="container">-->
+<!--<h1>DATA ENTRY FORM</h1>-->
+<!--    <form method="post">-->
+
+<!--        {% csrf_token %}-->
+<!--{% for field in form %}-->
+<!--   <div class="form-group row">-->
+<!--        <label for="id_{{field.name}}" class="col-2 col-form-label">{{field.label}}</label>-->
+<!--       <div class="col-10">-->
+<!--           {{ field }}-->
+<!--       </div>-->
+<!--   </div>-->
+<!--{% endfor %}-->
+<!--            <br>-->
+<!--<button type="submit" class="btn btn-primary" name="button">Save Data</button>-->
+<!--    </form>-->
+<!--</div>-->
 
 {% endblock %}

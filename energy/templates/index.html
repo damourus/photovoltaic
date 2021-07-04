@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block body %}
 
-    <form action="" method="post">
+    <form action="" method="get">
         <div class="row">
 
             {% csrf_token %}
@@ -52,9 +52,9 @@
 <!--                     <td>{{ p.pv_model__area }}</td>-->
                     <td> {{p.azimuth}}</td>
                     <td>{{p.slope}}</td>
-                    <td>{{p.pv_model__pv_model}}</td>
+                    <td>{{p.pv_model__pv_model__name}}</td>
                     <td>{{p.pv_model__number_of_modules}} </td>
-                    <td>{{p.inverter_model__inverter_model}}</td>
+                    <td>{{p.inverter_model__inverter_model__name}}</td>
                 </tr>
                 {% endfor %}
             </table>
