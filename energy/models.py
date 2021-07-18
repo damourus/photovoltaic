@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, F
 
 # Create your models here.
 
@@ -26,14 +26,7 @@ class Location(models.Model):
 
 
 class Inverter(models.Model):
-    # CATEGORY = {
-    #     ('Satcon Technology: PVS-30 (480V) 480V [CEC 2016]', 'Satcon Technology: PVS-30 (480V) 480V [CEC 2016]'),
-    #     ('ABB: MICRO-0.25-I-OUTD-US-208 [208V] 208V [CEC 2018]', 'ABB: MICRO-0.25-I-OUTD-US-208 [208V] 208V [CEC 2018]'),
-    #     ('SMA America: SB7000US 240V [CEC 2007]', 'SMA America: SB7000US 240V [CEC 2007]'),
-    #     ('OPTI International: GT 3000 (208V) 208V [CEC 2016]', 'OPTI International: GT 3000 (208V) 208V [CEC 2016]'),
-    # }
     inverter_model = models.ForeignKey(InverterCategory, on_delete=models.CASCADE)
-    # inverter_model = models.CharField(max_length=200, null=True, choices=CATEGORY)
     nominal_ac_voltage = models.IntegerField(max_length=10, null=True)
     maximum_ac_power = models.IntegerField(max_length=10, null=True)
     maximum_dc_power = models.FloatField(max_length=10, null=True)
@@ -80,15 +73,9 @@ class Photovoltaic(models.Model):
         ('West', 'West'),
         ('East', 'East'),
     }
-    # TYPES ={
-    #     ('Neo Solar Power D6M350E4AME', 'Neo Solar Power D6M350E4AME'),
-    #     ('A10Green Technology A10J-M60-235', 'A10Green Technology A10J-M60-235'),
-    #     ('A10Green Technology A10J-M60-220', 'A10Green Technology A10J-M60-220'),
-    #     ('LG Electronics LG345S2W-A5', 'LG Electronics LG345S2W-A5'),
-    # }
     facility_name = models.CharField(max_length=8, null=True)
-    inverter_model = models.ForeignKey(InverterCategory, null=True, on_delete=models.CASCADE)
     pv_model = models.ForeignKey(PvCategory, null=True, on_delete=models.CASCADE)
+    inverter_model = models.ForeignKey(InverterCategory, null=True, on_delete=models.CASCADE)
     rated_power = models.IntegerField(max_length=10, null=True)
     number_of_modules = models.IntegerField(max_length=8, null=True)
     b_i_p_v = models.CharField(max_length=4, null=True, choices=choices)
@@ -126,3 +113,31 @@ class Radiation(models.Model):
     def __str__(self):
         return f"{self.location.name}  {self.time} {self.day}"
 
+
+def monthlyRadiation():
+    mysum = Radiation.objects.values('month') \
+     .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
+         .order_by('month')
+
+    return mysum
+
+
+def energyGeneration(month):
+    pv = Photovoltaic.objects.all().first()
+    inv = Inverter.objects.all().first()
+    result = monthlyRadiation()[month]['m'] * (pv.efficiency / 100) * (1-pv.non_vertical_surface_solar_attenuation_rate) * (1-(inv.loss /100)) * pv.area
+
+    return result
+
+
+
+
+
+
+
+#
+# x= Photovoltaic._area()
+# def energy_generation(mysum, efficiency, non_vertical_surface_solar_attenuation_rate , loss, area):
+#     return (mysum * efficiency *(1-non_vertical_surface_solar_attenuation_rate) * (1-loss) * area)
+#
+#  energy_generation()
