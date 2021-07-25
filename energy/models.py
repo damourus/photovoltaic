@@ -110,34 +110,24 @@ class Radiation(models.Model):
     day = models.IntegerField(max_length=10, null=True)
     time = models.TimeField(max_length=10, null=True)
 
+    def monthlyRadiation(self):
+        self.mysum = Radiation.objects.values('month') \
+            .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
+            .order_by('month')
+
+        return self.mysum
+
+    monthlyRadiation = property(monthlyRadiation)
+
     def __str__(self):
         return f"{self.location.name}  {self.time} {self.day}"
-
-
-def monthlyRadiation():
-    mysum = Radiation.objects.values('month') \
-     .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
-         .order_by('month')
-
-    return mysum
 
 
 def energyGeneration(month):
     pv = Photovoltaic.objects.all().first()
     inv = Inverter.objects.all().first()
-    result = monthlyRadiation()[month]['m'] * (pv.efficiency / 100) * (1-pv.non_vertical_surface_solar_attenuation_rate) * (1-(inv.loss /100)) * pv.area
+    rad = Radiation.objects.all().first()
+    results = rad.monthlyRadiation[month]['m'] * (pv.efficiency / 100) * (1-pv.non_vertical_surface_solar_attenuation_rate) * (1-(inv.loss /100)) * pv.area
 
-    return result
+    return results
 
-
-
-
-
-
-
-#
-# x= Photovoltaic._area()
-# def energy_generation(mysum, efficiency, non_vertical_surface_solar_attenuation_rate , loss, area):
-#     return (mysum * efficiency *(1-non_vertical_surface_solar_attenuation_rate) * (1-loss) * area)
-#
-#  energy_generation()

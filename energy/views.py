@@ -40,5 +40,22 @@ def index(request):
     return render(request, 'energy/index.html', args)
 
 
+def display_monthlyRad(request):
+    mysum = Radiation.objects.values('month') \
+        .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
+        .order_by('month')
+    context = {
+        'mysum': mysum,
+    }
+
+    return render(request, 'energy/monthly_radiation.html', context)
+
+
+def energyCall(request):
+    items = dict()
+    for x in range(12):
+        items[x] = energyGeneration(x)
+
+    return render(request, "energy/energy_generated.html", {"items": items})
 
 
