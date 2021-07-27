@@ -123,11 +123,52 @@ class Radiation(models.Model):
         return f"{self.location.name}  {self.time} {self.day}"
 
 
-def energyGeneration(month):
-    pv = Photovoltaic.objects.all().first()
-    inv = Inverter.objects.all().first()
-    rad = Radiation.objects.all().first()
+def getCategoryId(n):
+    pc = PvCategory.objects.all().get(name=n)
+    return pc.id
+
+
+def comparePvModel(fromForm):
+    myid = getCategoryId(fromForm)
+    pvname = Photovoltaic.objects.all().get(pv_model_id=myid).pv_model
+
+    return pvname
+
+
+def getCategoryInvId(n):
+    invc = InverterCategory.objects.all().get(name=n)
+    return invc.id
+
+
+def compareInverterModel(fromForm):
+    invid = getCategoryId(fromForm)
+    invname = Inverter.objects.all().get(inverter_model_id=invid).inverter_model
+
+    return invname
+
+
+def getLocation(n):
+    L = Location.objects.all().get(name=n)
+    return L.id
+
+
+def compareLocation(fromForm):
+    locationid = getLocation(fromForm)
+    locationname = Radiation.objects.all().get(location_id=locationid).location
+
+    return locationname
+
+
+def energyGeneration(month, fromForm):
+    myid = getCategoryId(fromForm)
+    invid = getCategoryId(fromForm)
+    locationid = getCategoryId(fromForm)
+    pv = Photovoltaic.objects.all().get(pv_model_id=myid)
+    inv = Inverter.objects.all().get(inverter_model_id=invid)
+    rad = Radiation.objects.all().get(location_id=locationid)
     results = rad.monthlyRadiation[month]['m'] * (pv.efficiency / 100) * (1-pv.non_vertical_surface_solar_attenuation_rate) * (1-(inv.loss /100)) * pv.area
 
     return results
+
+
 
