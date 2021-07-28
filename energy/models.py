@@ -110,17 +110,25 @@ class Radiation(models.Model):
     day = models.IntegerField(max_length=10, null=True)
     time = models.TimeField(max_length=10, null=True)
 
-    def monthlyRadiation(self):
-        self.mysum = Radiation.objects.values('month') \
-            .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
-            .order_by('month')
-
-        return self.mysum
-
-    monthlyRadiation = property(monthlyRadiation)
+    # def monthlyRadiation(self):
+    #     self.mysum = Radiation.objects.values('month') \
+    #         .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
+    #         .order_by('month')
+    #
+    #     return self.mysum
+    #
+    # monthlyRadiation = property(monthlyRadiation)
 
     def __str__(self):
         return f"{self.location.name}  {self.time} {self.day}"
+
+
+def monthlyRadiation3():
+    mysum4 = Radiation.objects.filter(location_id=Radiation.location).filter(slope=Radiation.slope).filter(azimuth=Radiation.azimuth)\
+        .values('month') \
+        .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
+        .order_by('month')
+    return mysum4
 
 
 def getCategoryId(n):
@@ -140,8 +148,8 @@ def getCategoryInvId(n):
     return invc.id
 
 
-def compareInverterModel(fromForm):
-    invid = getCategoryId(fromForm)
+def compareInverterModel(fromForminv):
+    invid = getCategoryId(fromForminv)
     invname = Inverter.objects.all().get(inverter_model_id=invid).inverter_model
 
     return invname
@@ -152,17 +160,17 @@ def getLocation(n):
     return L.id
 
 
-def compareLocation(fromForm):
-    locationid = getLocation(fromForm)
+def compareLocation(fromFormLoc):
+    locationid = getLocation(fromFormLoc)
     locationname = Radiation.objects.all().get(location_id=locationid).location
 
     return locationname
 
 
-def energyGeneration(month, fromForm):
+def energyGeneration(month, fromForm, fromForminv, fromFormLoc):
     myid = getCategoryId(fromForm)
-    invid = getCategoryId(fromForm)
-    locationid = getCategoryId(fromForm)
+    invid = getCategoryId(fromForminv)
+    locationid = getCategoryId(fromFormLoc)
     pv = Photovoltaic.objects.all().get(pv_model_id=myid)
     inv = Inverter.objects.all().get(inverter_model_id=invid)
     rad = Radiation.objects.all().get(location_id=locationid)

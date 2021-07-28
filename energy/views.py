@@ -24,7 +24,7 @@ def index(request):
             radiation.pv = pv
             radiation.save()
 
-            return redirect(reverse('index'))
+            return redirect('energyCall')
 
     else:
         pv_form = PvForm()
@@ -54,7 +54,7 @@ def display_monthlyRad(request):
 def energyCall(request):
     items = dict()
     for x in range(12):
-        items[x] = energyGeneration(x)
+        items[x] = energyGeneration(x, Photovoltaic.pv_model, Inverter.inverter_model, Radiation.location)
 
     return render(request, "energy/energy_generated.html", {"items": items})
 
