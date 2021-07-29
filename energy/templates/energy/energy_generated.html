@@ -9,7 +9,7 @@
            <h1>Energy Generated</h1>
            <ul>
                {% for monthlyEnergy in energyGenerated %}
-               <li>{{monthlyEnergy.FacilityName}}:{{ monthlyEnergy.Month }}:{{ monthlyEnergy.MonthlyEnergy }}</li>
+               <li>{{monthlyEnergy.FacilityName}} Energy Generation (Kwh) in{{ monthlyEnergy.Month }} is {{ monthlyEnergy.MonthlyEnergy }}</li>
                {% endfor %}
            </ul>
         </div>

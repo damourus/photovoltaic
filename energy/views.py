@@ -76,7 +76,10 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm):
         monthlyRecord = {'Month': int(item['month']), 'MonthlyEnergy': monthlyEnergy, 'FacilityName': pv.facility_name}
         energyGenerated.append(monthlyRecord)
 
+
+
     return energyGenerated
+
 
 # def energyCall(request):
 #     items = dict()
