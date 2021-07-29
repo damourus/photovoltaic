@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Sum, F
 
+
+
 # Create your models here.
 
 
@@ -38,19 +40,22 @@ class Inverter(models.Model):
     minimum_mppt_dc_voltage = models.IntegerField(max_length=10, null=True)
     maximum_mppt_dc_voltage = models.IntegerField(max_length=10, null=True)
 
+    @property
     def inveff(self):
         return self.maximum_ac_power / self.maximum_dc_power
-    inveff = property(inveff)
+    # inveff = property(inveff)
 
-    def _invertereff(self):
+    @property
+    def invertereff(self):
         return self.inveff * 100
 
-    invertereff = property(_invertereff)
+    # invertereff = property(_invertereff)
 
+    @property
     def rloss(self):
         return (1-(1-0.02) * (1-0.03) * (1-0.02) * (1-0.01) * (1-0.015) * (1-0.02) * (1-0.005) * (1-0.03) * self.inveff) * 100
 
-    loss = property(rloss)
+    # loss = property(rloss)
 
     def __str__(self):
         return self.inverter_model.name
@@ -86,15 +91,17 @@ class Photovoltaic(models.Model):
     non_vertical_surface_solar_attenuation_rate = models.FloatField(max_length=10, null=True)
     total_equipment_cost = models.IntegerField(max_length=10, null=True)
 
-    def _area(self):
+    @property
+    def area(self):
         return self.width * self.length * self.number_of_modules
 
-    area = property(_area)
+    # area = property(_area)
 
-    def _efficiency(self):
+    @property
+    def efficiency(self):
         return self.rated_power * 100 / self.width / self.length / 1000
 
-    efficiency = property(_efficiency)
+    # efficiency = property(_efficiency)
 
     def __str__(self):
         return self.pv_model.name
@@ -123,60 +130,7 @@ class Radiation(models.Model):
         return f"{self.location.name}  {self.time} {self.day}"
 
 
-def monthlyRadiation3():
-    mysum4 = Radiation.objects.filter(location_id=Radiation.location).filter(slope=Radiation.slope).filter(azimuth=Radiation.azimuth)\
-        .values('month') \
-        .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
-        .order_by('month')
-    return mysum4
 
-
-def getCategoryId(n):
-    pc = PvCategory.objects.all().get(name=n)
-    return pc.id
-
-
-def comparePvModel(fromForm):
-    myid = getCategoryId(fromForm)
-    pvname = Photovoltaic.objects.all().get(pv_model_id=myid).pv_model
-
-    return pvname
-
-
-def getCategoryInvId(n):
-    invc = InverterCategory.objects.all().get(name=n)
-    return invc.id
-
-
-def compareInverterModel(fromForminv):
-    invid = getCategoryId(fromForminv)
-    invname = Inverter.objects.all().get(inverter_model_id=invid).inverter_model
-
-    return invname
-
-
-def getLocation(n):
-    L = Location.objects.all().get(name=n)
-    return L.id
-
-
-def compareLocation(fromFormLoc):
-    locationid = getLocation(fromFormLoc)
-    locationname = Radiation.objects.all().get(location_id=locationid).location
-
-    return locationname
-
-
-def energyGeneration(month, fromForm, fromForminv, fromFormLoc):
-    myid = getCategoryId(fromForm)
-    invid = getCategoryId(fromForminv)
-    locationid = getCategoryId(fromFormLoc)
-    pv = Photovoltaic.objects.all().get(pv_model_id=myid)
-    inv = Inverter.objects.all().get(inverter_model_id=invid)
-    rad = Radiation.objects.all().get(location_id=locationid)
-    results = rad.monthlyRadiation[month]['m'] * (pv.efficiency / 100) * (1-pv.non_vertical_surface_solar_attenuation_rate) * (1-(inv.loss /100)) * pv.area
-
-    return results
 
 
 

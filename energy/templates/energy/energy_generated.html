@@ -2,27 +2,18 @@
 
 {% block body %}
 
+
 <div class="row">
-   <div class="col-md">
-      <div class="card card-body">
-          <ul>
-              <li>In Jan energy generation is: {{ items.0}}</li>
-              <li>In Feb energy generation is: {{ items.1}}</li>
-              <li>In Mar energy generation is: {{ items.2}}</li>
-              <li>In Apr energy generation is: {{ items.3}}</li>
-              <li>In May energy generation is: {{ items.4}}</li>
-              <li>In Jun energy generation is: {{ items.5}}</li>
-              <li>In Jul energy generation is: {{ items.6}}</li>
-              <li>In Aug energy generation is: {{ items.7}}</li>
-              <li>In Sept energy generation is: {{ items.8}}</li>
-              <li>In Oct energy generation is: {{ items.9}}</li>
-              <li>In Nov energy generation is: {{ items.10}}</li>
-              <li>In Dec energy generation is: {{ items.11}}</li>
-
-          </ul>
-      </div>
-   </div>
+    <div class="col-md">
+        <div class="card card-body">
+           <h1>Energy Generated</h1>
+           <ul>
+               {% for monthlyEnergy in energyGenerated %}
+               <li>{{monthlyEnergy.FacilityName}}:{{ monthlyEnergy.Month }}:{{ monthlyEnergy.MonthlyEnergy }}</li>
+               {% endfor %}
+           </ul>
+        </div>
+    </div>
 </div>
-
 
 {% endblock %}
