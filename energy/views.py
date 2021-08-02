@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 from django.urls import reverse
 from .forms import *
+from django.db.models import Sum, F
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -22,8 +23,9 @@ def index(request):
             pvFromForm = pv.pv_model
             invFromForm = inverter.inverter_model
             locationFromForm = radiation.location
+            facilityFromForm = pv.facility_name
 
-            energyGenerated = energyGeneration(pvFromForm, invFromForm, locationFromForm)
+            energyGenerated = energyGeneration(pvFromForm, invFromForm, locationFromForm, facilityFromForm)
 
             return render(request,'energy/energy_generated.html', {'energyGenerated': energyGenerated})
 
@@ -48,25 +50,9 @@ def monthlyRadiation3():
     return mysum4
 
 
-def getCategoryId(n):
-    pc = PvCategory.objects.all().get(name=n)
-    return pc.id
-
-
-def getCategoryInvId(n):
-    invc = InverterCategory.objects.all().get(name=n)
-    return invc.id
-
-
-def getLocation(n):
-    L = Location.objects.all().get(name=n)
-    return L.id
-
-
-def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm):
-    pv = Photovoltaic.objects.all().get(pv_model_id=pvidFromForm)
+def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm, facilityFromForm):
+    pv = Photovoltaic.objects.all().get(pv_model_id=pvidFromForm, facility_name=facilityFromForm)
     inv = Inverter.objects.all().get(inverter_model_id=invidFromForm)
-    # rad = Radiation.objects.all().get(location_id=locationidFromForm)
     partialEnergy = (pv.efficiency / 100) * (1 - pv.non_vertical_surface_solar_attenuation_rate) * (
                 1 - (inv.rloss / 100)) * pv.area
     allMonthlyRadiations = monthlyRadiation3()
@@ -76,24 +62,4 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm):
         monthlyRecord = {'Month': int(item['month']), 'MonthlyEnergy': monthlyEnergy, 'FacilityName': pv.facility_name}
         energyGenerated.append(monthlyRecord)
 
-
-
     return energyGenerated
-
-
-# def energyCall(request):
-#     items = dict()
-#     for x in range(12):
-#         items[x] = energyGeneration(x)
-#
-#     return render(request, "energy/energy_generated.html", {"items": items})
-#
-#
-# def test_input(request):
-#     pvs = Photovoltaic.objects.all()
-#     inverters = Inverter.objects.all()
-#     rad = Radiation.objects.all()
-#
-#     context = {'pvs': pvs, 'inverters': inverters, 'rad': rad}
-#
-#     return render(request, 'energy/energy_generated.html', context)

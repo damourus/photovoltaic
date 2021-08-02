@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models import Sum, F
-
 
 
 # Create your models here.
@@ -43,19 +41,14 @@ class Inverter(models.Model):
     @property
     def inveff(self):
         return self.maximum_ac_power / self.maximum_dc_power
-    # inveff = property(inveff)
 
     @property
     def invertereff(self):
         return self.inveff * 100
 
-    # invertereff = property(_invertereff)
-
     @property
     def rloss(self):
         return (1-(1-0.02) * (1-0.03) * (1-0.02) * (1-0.01) * (1-0.015) * (1-0.02) * (1-0.005) * (1-0.03) * self.inveff) * 100
-
-    # loss = property(rloss)
 
     def __str__(self):
         return self.inverter_model.name
@@ -95,13 +88,9 @@ class Photovoltaic(models.Model):
     def area(self):
         return self.width * self.length * self.number_of_modules
 
-    # area = property(_area)
-
     @property
     def efficiency(self):
         return self.rated_power * 100 / self.width / self.length / 1000
-
-    # efficiency = property(_efficiency)
 
     def __str__(self):
         return self.pv_model.name
@@ -116,15 +105,6 @@ class Radiation(models.Model):
     month = models.CharField(max_length=10, null=True)
     day = models.IntegerField(max_length=10, null=True)
     time = models.TimeField(max_length=10, null=True)
-
-    # def monthlyRadiation(self):
-    #     self.mysum = Radiation.objects.values('month') \
-    #         .annotate(m=Sum(F('radiations') * F('correction_rate'))) \
-    #         .order_by('month')
-    #
-    #     return self.mysum
-    #
-    # monthlyRadiation = property(monthlyRadiation)
 
     def __str__(self):
         return f"{self.location.name}  {self.time} {self.day}"
