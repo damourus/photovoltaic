@@ -7,11 +7,22 @@
     <div class="col-md">
         <div class="card card-body">
            <h1>Energy Generated</h1>
-           <ul>
-               {% for monthlyEnergy in energyGenerated %}
-               <li>{{monthlyEnergy.FacilityName}} Energy Generation (Kwh) in{{ monthlyEnergy.Month }} is {{ monthlyEnergy.MonthlyEnergy }}</li>
-               {% endfor %}
-           </ul>
+          </div>
+          <div class="card card-body">
+              <table class="table">
+                  <tr>
+                      <th>Facility Name</th>
+                      <th>Month</th>
+                      <th>Energy generation (Kwh)</th>
+                  </tr>
+                  {% for monthlyEnergy in energyGenerated %}
+                  <tr>
+                      <td>>{{monthlyEnergy.FacilityName}} </td>
+                      <td>{{ monthlyEnergy.Month }} </td>
+                      <td>{{ monthlyEnergy.MonthlyEnergy }}</td>
+                  </tr>
+                  {% endfor %}
+              </table>
         </div>
     </div>
 </div>

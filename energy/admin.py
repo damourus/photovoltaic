@@ -1,12 +1,11 @@
+from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from .models import *
 
+
 # Register your models here.
 
-admin.site.register(Photovoltaic)
-admin.site.register(Inverter)
-admin.site.register(Radiation)
-admin.site.register(InverterCategory)
-admin.site.register(PvCategory)
-admin.site.register(Location)
+@admin.register(Location, InverterCategory, PvCategory, Photovoltaic, Inverter, Radiation)
 
+class ViewAdmin(ImportExportModelAdmin):
+    pass

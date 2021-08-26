@@ -4,7 +4,7 @@
 {% block body %}
 
 <div class="container">
-<h1>DATA ENTRY FORM</h1>
+<h1>INPUT INSTALLATION REQUIREMENT</h1>
     {% if error_message %}
     <ul class="errorlist">
         <li>{{ error_message }}</li>
@@ -15,7 +15,7 @@
   <fieldset class="add_data">
     <legend>FACILITY</legend>
     <table>
-        {% form_row pv_form.facility_name %}
+        {% form_row input_form.facility_name %}
     </table>
 </fieldset>
         <br>
@@ -29,8 +29,8 @@
 <fieldset class="add_data">
     <legend>ENVELOPE</legend>
     <table>
-        {% form_row pv_form.envelope_selection %}
-        {% form_row pv_form.direction %}
+        {% form_row input_form.envelope_selection %}
+        {% form_row input_form.direction %}
     </table>
 </fieldset>
         <br>
@@ -52,7 +52,7 @@
 <fieldset class="add_data">
     <legend>SCALE</legend>
     <table>
-        {% form_row pv_form.number_of_modules %}
+        {% form_row input_form.number_of_modules %}
     </table>
 </fieldset>
         <br>
@@ -66,14 +66,14 @@
 <fieldset class="add_data">
     <legend>Non Vertical</legend>
     <table>
-        {% form_row pv_form.non_vertical_surface_solar_attenuation_rate %}
+        {% form_row input_form.non_vertical_surface_solar_attenuation_rate %}
     </table>
 </fieldset>
         <br>
 <fieldset class="add_data">
     <legend>Initial Cost</legend>
     <table>
-        {% form_row pv_form.total_equipment_cost %}
+        {% form_row input_form.total_equipment_cost %}
     </table>
 </fieldset>
         <br>
