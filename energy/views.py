@@ -5,7 +5,7 @@ from django.urls import reverse
 from .forms import *
 from django.db.models import Sum, F
 from django.views.decorators.csrf import csrf_exempt
-# from django.views.generic import TemplateView
+
 
 
 # Create your views here.
@@ -83,27 +83,3 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm, non_vertic
         energyGenerated.append(monthlyRecord)
 
     return energyGenerated
-
-# class EnergyChartView(TemplateView):
-#     template_name = 'energy/monthly_radiation.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['qs'] = Radiation.objects.all()
-#         return context
-
-
-
-
-
-
-# Following are for Chart to analyse
-# def index(request):
-#     labels =[] #for horizontal
-#     data =[] #for vertical
-#
-#     queryset =  monthlyRecord.objects.order_by('-month')[:12]
-#     for pv in queryset:
-#         labels.append(pv.month)
-#         data.append(pv.monthlyEnergy)
-#     return render(request, 'energy/energy_generated.html', {'labels':labels, 'data':data})
