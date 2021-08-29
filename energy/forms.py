@@ -35,7 +35,7 @@ class InputForm(forms.Form):
         ('East', 'East'),
     }
 
-    facility_name = forms.CharField(label = 'Facility Name', max_length=10)
+    facility_name1 = forms.CharField(label = 'Facility Name', max_length=10)
     envelope_selection = forms.ChoiceField(label = 'Envelope Selection', choices=TYPES)
     direction = forms.ChoiceField(label = 'Direction', choices=Choices)
     number_of_modules = forms.IntegerField(label = 'Number of Modules (EA)')

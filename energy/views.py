@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
+from django.views.generic import TemplateView
 from django.template.context_processors import csrf
 from django.urls import reverse
 from .forms import *
 from django.db.models import Sum, F
 from django.views.decorators.csrf import csrf_exempt
+# from django.views.generic import TemplateView
 
 
 # Create your views here.
@@ -21,22 +23,29 @@ def index(request):
             pv = pv_form.save(commit=False)
             inverter = inverter_form.save(commit=False)
             radiation = radiation_form.save(commit=False)
-            facility_name = input_form.cleaned_data['facility_name']
+            facility_name = input_form.cleaned_data['facility_name1']
             number_of_modules = input_form.cleaned_data['number_of_modules']
             non_vertical_surface_solar_attenuation_rate = input_form.cleaned_data['non_vertical_surface_solar_attenuation_rate']
-
-            print (facility_name, number_of_modules, non_vertical_surface_solar_attenuation_rate)
-
 
             pvFromForm = pv.pv_model
             invFromForm = inverter.inverter_model
             locationFromForm = radiation.location
 
 
-
             energyGenerated = energyGeneration(pvFromForm, invFromForm, locationFromForm, non_vertical_surface_solar_attenuation_rate, number_of_modules, facility_name)
 
-            return render(request,'energy/energy_generated.html', {'energyGenerated': energyGenerated})
+            labels = []
+            data = []
+            for i in range(0, 12):
+                labels.append(energyGenerated[i]['Month'])
+                data.append(energyGenerated[i]['MonthlyEnergy'])
+
+                print(labels[i], data[i])
+
+            print(energyGenerated[i]['Month'])
+            print(energyGenerated[i]['MonthlyEnergy'])
+
+            return render(request,'energy/energy_generated.html', {'energyGenerated': energyGenerated, 'labels':labels, 'data':data})
 
     else:
         pv_form = PvForm()
@@ -75,6 +84,19 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm, non_vertic
 
     return energyGenerated
 
+# class EnergyChartView(TemplateView):
+#     template_name = 'energy/monthly_radiation.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['qs'] = Radiation.objects.all()
+#         return context
+
+
+
+
+
+
 # Following are for Chart to analyse
 # def index(request):
 #     labels =[] #for horizontal
@@ -83,5 +105,5 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm, non_vertic
 #     queryset =  monthlyRecord.objects.order_by('-month')[:12]
 #     for pv in queryset:
 #         labels.append(pv.month)
-#         data.append(pv.facility_name)
+#         data.append(pv.monthlyEnergy)
 #     return render(request, 'energy/energy_generated.html', {'labels':labels, 'data':data})
