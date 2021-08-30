@@ -5,25 +5,20 @@
 <br>
 <div class="row">
     <div class="col-md">
-        <div class="card card-body">
             <h1>Energy Generated</h1>
-        </div>
-        <div class="card card-body">
             <table class="table">
-                <tr>
-                    <th>Facility Name</th>
-                    <th>Month</th>
-                    <th>Energy generation (Kwh)</th>
+                <tr><th>Facility Name</th>
+                    {% for monthlyEnergy in energyGenerated %}
+                    <th>>{{ monthlyEnergy.Month }} </th>
+                    {% endfor %}
                 </tr>
-                {% for monthlyEnergy in energyGenerated %}
-                <tr>
-                    <td>>{{monthlyEnergy.FacilityName}} </td>
-                    <td>{{ monthlyEnergy.Month }} </td>
+<!--                Remember to look about how this facility name can be displayed under its header without loop-->
+                <tr><td>{{energyGenerated.FacilityName}}</td>
+                    {% for monthlyEnergy in energyGenerated %}
                     <td>{{ monthlyEnergy.MonthlyEnergy }}</td>
+                    {% endfor %}
                 </tr>
-                {% endfor %}
             </table>
-        </div>
     </div>
 </div>
 <div class="row">
