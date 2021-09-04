@@ -9,7 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
-input = InputForm()
 
 @csrf_exempt
 def index(request):
@@ -83,3 +82,54 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm, non_vertic
         energyGenerated.append(monthlyRecord)
 
     return energyGenerated
+
+@csrf_exempt
+def add_pv2(request):
+    if request.method == "POST":
+        pv_form = PvForm(request.POST)
+        inverter_form = InverterForm(request.POST)
+        radiation_form = RadiationForm(request.POST)
+        input_form = InputForm(request.POST)
+
+        if pv_form.is_valid() and inverter_form.is_valid() and radiation_form.is_valid() and input_form.is_valid():
+            pv = pv_form.save(commit=False)
+            inverter = inverter_form.save(commit=False)
+            radiation = radiation_form.save(commit=False)
+            facility_name = input_form.cleaned_data['facility_name1']
+            number_of_modules = input_form.cleaned_data['number_of_modules']
+            non_vertical_surface_solar_attenuation_rate = input_form.cleaned_data[
+                'non_vertical_surface_solar_attenuation_rate']
+
+            pvFromForm = pv.pv_model
+            invFromForm = inverter.inverter_model
+            locationFromForm = radiation.location
+
+            energyGenerated = energyGeneration(pvFromForm, invFromForm, locationFromForm,
+                                               non_vertical_surface_solar_attenuation_rate, number_of_modules,
+                                               facility_name)
+
+            labels = []
+            data = []
+            for i in range(0, 12):
+                labels.append(energyGenerated[i]['Month'])
+                data.append(energyGenerated[i]['MonthlyEnergy'])
+
+
+                return render(request, 'energy/energy_generated.html', {'energyGenerated': energyGenerated, 'labels': labels, 'data': data})
+
+    else:
+        pv_form = PvForm()
+        inverter_form = InverterForm()
+        radiation_form = RadiationForm()
+        input_form = InputForm()
+
+    args = {}
+    args.update(csrf(request))
+    args['pv_form'] = pv_form
+    args['inverter_form'] = inverter_form
+    args['radiation_form'] = radiation_form
+    args['input_form'] = input_form
+
+    return render(request, 'energy/add_pv.html', args)
+
+

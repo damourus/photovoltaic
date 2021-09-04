@@ -12,10 +12,11 @@
                     <th>>{{ monthlyEnergy.Month }} </th>
                     {% endfor %}
                 </tr>
-<!--                Remember to look about how this facility name can be displayed under its header without loop-->
-                <tr><td>{{energyGenerated.FacilityName}}</td>
+                {% for monthlyEnergy in energyGenerated|slice:":1" %}
+                <tr><td>{{ monthlyEnergy.FacilityName }}</td>
+                    {% endfor %}
                     {% for monthlyEnergy in energyGenerated %}
-                    <td>{{ monthlyEnergy.MonthlyEnergy }}</td>
+                    <td>{{ monthlyEnergy.MonthlyEnergy|floatformat:2 }}</td>
                     {% endfor %}
                 </tr>
             </table>
@@ -24,7 +25,7 @@
 <div class="row">
     <div class="col-md">
         <div class="card card-body">
-         <canvas id="myChart" width="250" height="150"></canvas>
+            <canvas id="myChart" width="250" height="150"></canvas>
         </div>
         <script type="text/javascript">
         $(document).ready(function(){
@@ -75,7 +76,7 @@
 
 <br>
 <div class="button">
-         <a class="btn btn-primary btn-md" href="#">Compare</a>
+    <a class="btn btn-primary btn-md" href="{% url 'add_pv2' %}">Add PV</a>
 </div>
 
 {% endblock %}
