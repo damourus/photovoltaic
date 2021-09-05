@@ -5,6 +5,8 @@ from django.urls import reverse
 from .forms import *
 from django.db.models import Sum, F
 from django.views.decorators.csrf import csrf_exempt
+from django import template
+import calendar
 
 
 
@@ -36,7 +38,7 @@ def index(request):
             labels = []
             data = []
             for i in range(0, 12):
-                labels.append(energyGenerated[i]['Month'])
+                labels.append(calendar.month_abbr[energyGenerated[i]['Month']])
                 data.append(energyGenerated[i]['MonthlyEnergy'])
 
                 print(labels[i], data[i])
@@ -78,13 +80,13 @@ def energyGeneration(pvidFromForm, invidFromForm, locationidFromForm, non_vertic
     energyGenerated = []
     for item in allMonthlyRadiations:
         monthlyEnergy = item['m'] * partialEnergy
-        monthlyRecord = {'Month': int(item['month']), 'MonthlyEnergy': monthlyEnergy, 'FacilityName': facility_name}
+        monthlyRecord = {'Month':(item['month']), 'MonthlyEnergy': monthlyEnergy, 'FacilityName': facility_name}
         energyGenerated.append(monthlyRecord)
 
     return energyGenerated
 
 @csrf_exempt
-def add_pv2(request):
+def add_pv(request):
     if request.method == "POST":
         pv_form = PvForm(request.POST)
         inverter_form = InverterForm(request.POST)
@@ -97,25 +99,27 @@ def add_pv2(request):
             radiation = radiation_form.save(commit=False)
             facility_name = input_form.cleaned_data['facility_name1']
             number_of_modules = input_form.cleaned_data['number_of_modules']
-            non_vertical_surface_solar_attenuation_rate = input_form.cleaned_data[
-                'non_vertical_surface_solar_attenuation_rate']
+            non_vertical_surface_solar_attenuation_rate = input_form.cleaned_data['non_vertical_surface_solar_attenuation_rate']
 
             pvFromForm = pv.pv_model
             invFromForm = inverter.inverter_model
             locationFromForm = radiation.location
 
-            energyGenerated = energyGeneration(pvFromForm, invFromForm, locationFromForm,
-                                               non_vertical_surface_solar_attenuation_rate, number_of_modules,
-                                               facility_name)
+            energyGenerated = energyGeneration(pvFromForm, invFromForm, locationFromForm,non_vertical_surface_solar_attenuation_rate, number_of_modules,facility_name)
 
             labels = []
             data = []
             for i in range(0, 12):
-                labels.append(energyGenerated[i]['Month'])
+                labels.append(calendar.month_abbr[energyGenerated[i]['Month']])
                 data.append(energyGenerated[i]['MonthlyEnergy'])
 
+                print(labels[i], data[i])
 
-                return render(request, 'energy/energy_generated.html', {'energyGenerated': energyGenerated, 'labels': labels, 'data': data})
+            print(energyGenerated[i]['Month'])
+            print(energyGenerated[i]['MonthlyEnergy'])
+
+            return render(request, 'energy/energy_generated.html',
+                          {'energyGenerated': energyGenerated, 'labels': labels, 'data': data})
 
     else:
         pv_form = PvForm()

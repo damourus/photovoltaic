@@ -4,78 +4,109 @@
 {% block body %}
 
 <div class="container">
-<h1>INPUT INSTALLATION REQUIREMENT</h1>
+    <h1>USER CHOICES</h1>
     {% if error_message %}
     <ul class="errorlist">
         <li>{{ error_message }}</li>
     </ul>
     {% endif %}
+
+    <script type="text/javascript">
+     document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('form').onsubmit = ()=>{
+          const facilityName = document.querySelector('#add_data').value;
+          const pvModel = document.querySelector('#add_data').value;
+          const numberOfModules = document.querySelector('#add_data').value;
+          const inverterModel = document.querySelector('#add_data').value;
+          const verticalSurface = document.querySelector('#add_data').value;
+
+          const li = document.createElement('li');
+          li.innerHTML = facilityName;
+          li.innerHTML = pvModel;
+          li.innerHTML = numberOfModules;
+          li.innerHTML = inverterModel;
+          li.innerHTML = verticalSurface;
+
+          document.querySelector('#container').append(li);
+
+          document.querySelector('#add_data').value='';
+          document.querySelector('#add_data').value='';
+          document.querySelector('#add_data').value='';
+          document.querySelector('#add_data').value='';
+          document.querySelector('#add_data').value='';
+
+          //Stopping form from submitting
+          return false;
+        }
+     });
+
+  </script>
     <form method="post">
         <br>
-  <fieldset class="add_data">
-    <legend>FACILITY</legend>
-    <table>
-        {% form_row input_form.facility_name1 %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>FACILITY</legend>
+            <table>
+                {% form_row input_form.facility_name1 %}
+            </table>
+        </fieldset>
         <br>
-         <fieldset class="add_data">
-    <legend>LOCATION</legend>
-    <table>
-        {% form_row radiation_form.location %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>LOCATION</legend>
+            <table>
+                {% form_row radiation_form.location %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>ENVELOPE</legend>
-    <table>
-        {% form_row input_form.envelope_selection %}
-        {% form_row input_form.direction %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>ENVELOPE</legend>
+            <table>
+                {% form_row input_form.envelope_selection %}
+                {% form_row input_form.direction %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>INSTALLATION SLOPE</legend>
-    <table>
-        {% form_row radiation_form.azimuth %}
-        {% form_row radiation_form.slope %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>INSTALLATION SLOPE</legend>
+            <table>
+                {% form_row radiation_form.azimuth %}
+                {% form_row radiation_form.slope %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>PV SPECIFICATION</legend>
-    <table>
-        {% form_row pv_form.pv_model %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>PV SPECIFICATION</legend>
+            <table>
+                {% form_row pv_form.pv_model %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>SCALE</legend>
-    <table>
-        {% form_row input_form.number_of_modules %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>SCALE</legend>
+            <table>
+                {% form_row input_form.number_of_modules %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>INVERTER</legend>
-    <table>
-        {% form_row inverter_form.inverter_model %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>INVERTER</legend>
+            <table>
+                {% form_row inverter_form.inverter_model %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>Non Vertical</legend>
-    <table>
-        {% form_row input_form.non_vertical_surface_solar_attenuation_rate %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>Non Vertical</legend>
+            <table>
+                {% form_row input_form.non_vertical_surface_solar_attenuation_rate %}
+            </table>
+        </fieldset>
         <br>
-<fieldset class="add_data">
-    <legend>Initial Cost</legend>
-    <table>
-        {% form_row input_form.total_equipment_cost %}
-    </table>
-</fieldset>
+        <fieldset class="add_data">
+            <legend>Initial Cost</legend>
+            <table>
+                {% form_row input_form.total_equipment_cost %}
+            </table>
+        </fieldset>
         <br>
         <button type="submit" class="btn btn-primary" name="button">Submit Data</button>
     </form>
